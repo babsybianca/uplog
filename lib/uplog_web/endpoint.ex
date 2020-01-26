@@ -42,5 +42,7 @@ defmodule UplogWeb.Endpoint do
     key: "_uplog_key",
     signing_salt: "XS8hKBrU"
 
+  plug Pow.Plug.Session, otp_app: :uplog
+
   plug UplogWeb.Router
 end
