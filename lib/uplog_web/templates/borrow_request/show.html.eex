@@ -1,0 +1,23 @@
+<h1>Show Borrow request</h1>
+
+<ul>
+
+  <li>
+    <strong>Approved at:</strong>
+    <%= @borrow_request.approved_at %>
+  </li>
+
+  <li>
+    <strong>Claimed at:</strong>
+    <%= @borrow_request.claimed_at %>
+  </li>
+
+  <li>
+    <strong>Received back at:</strong>
+    <%= @borrow_request.received_back_at %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.borrow_request_path(@conn, :edit, @borrow_request) %></span>
+<span><%= link "Back", to: Routes.borrow_request_path(@conn, :index) %></span>

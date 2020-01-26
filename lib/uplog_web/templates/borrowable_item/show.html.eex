@@ -1,0 +1,23 @@
+<h1>Show Borrowable item</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @borrowable_item.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @borrowable_item.description %>
+  </li>
+
+  <li>
+    <strong>Visible:</strong>
+    <%= @borrowable_item.visible %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.borrowable_item_path(@conn, :edit, @borrowable_item) %></span>
+<span><%= link "Back", to: Routes.borrowable_item_path(@conn, :index) %></span>

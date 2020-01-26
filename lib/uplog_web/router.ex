@@ -24,6 +24,10 @@ defmodule UplogWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    resources "/organizations", OrganizationController do
+      resources "/items", BorrowRequestController
+      resources "/borrow_requests", BorrowRequestController
+    end
   end
 
   # Other scopes may use custom stacks.

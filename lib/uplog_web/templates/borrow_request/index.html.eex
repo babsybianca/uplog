@@ -1,0 +1,30 @@
+<h1>Listing Borrow requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Approved at</th>
+      <th>Claimed at</th>
+      <th>Received back at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for borrow_request <- @borrow_requests do %>
+    <tr>
+      <td><%= borrow_request.approved_at %></td>
+      <td><%= borrow_request.claimed_at %></td>
+      <td><%= borrow_request.received_back_at %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.borrow_request_path(@conn, :show, borrow_request) %></span>
+        <span><%= link "Edit", to: Routes.borrow_request_path(@conn, :edit, borrow_request) %></span>
+        <span><%= link "Delete", to: Routes.borrow_request_path(@conn, :delete, borrow_request), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Borrow request", to: Routes.borrow_request_path(@conn, :new) %></span>
