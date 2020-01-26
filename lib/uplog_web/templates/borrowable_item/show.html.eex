@@ -1,5 +1,7 @@
 <h1>Show Borrowable item</h1>
 
+<span>View items offered by <%= link @organization.name, to: Routes.organization_borrowable_item_path(@conn, :index, @organization) %></span>
+
 <ul>
 
   <li>
@@ -19,5 +21,5 @@
 
 </ul>
 
-<span><%= link "Edit", to: Routes.borrowable_item_path(@conn, :edit, @borrowable_item) %></span>
-<span><%= link "Back", to: Routes.borrowable_item_path(@conn, :index) %></span>
+<span><%= link "Edit", to: Routes.organization_borrowable_item_path(@conn, :edit, @organization, @borrowable_item) %></span>
+<span><%= link "Borrow", to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item), method: :create %></span>

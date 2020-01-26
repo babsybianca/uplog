@@ -6,7 +6,7 @@ defmodule Uplog.Borrowables.BorrowableItem do
     field :description, :string
     field :name, :string
     field :visible, :boolean, default: true
-    field :organization_id, :id
+    belongs_to :organization, Uplog.Borrowables.Organization
 
     timestamps()
   end

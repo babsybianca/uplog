@@ -14,6 +14,11 @@ defmodule UplogWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
+  end
+
   scope "/" do
     pipe_through :browser
 
@@ -24,9 +29,19 @@ defmodule UplogWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/", UplogWeb do
+    pipe_through [:browser, :protected]
+
     resources "/organizations", OrganizationController do
-      resources "/items", BorrowRequestController
-      resources "/borrow_requests", BorrowRequestController
+      post "/add_admin", OrganizationController, :add_admin, as: :add_admin
+      resources "/items", BorrowableItemController do
+        resources "/borrow_requests", BorrowRequestController do
+          post "/approve", BorrowRequestController, :approve, as: :approve
+          post "/deny", BorrowRequestController, :deny, as: :deny
+        end
+      end
     end
   end
 

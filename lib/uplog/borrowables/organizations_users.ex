@@ -3,10 +3,10 @@ defmodule Uplog.Borrowables.OrganizationsUsers do
   import Ecto.Changeset
 
   schema "organizations_users" do
-    field :organization_id, :id
-    field :user_id, :id
     field :added_by_user_id, :id
     field :type, :id
+    belongs_to :user, Uplog.Users.User
+    belongs_to :organization, Uplog.Borrowables.Organization
 
     timestamps()
   end

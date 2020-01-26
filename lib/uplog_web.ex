@@ -23,6 +23,7 @@ defmodule UplogWeb do
 
       import Plug.Conn
       import UplogWeb.Gettext
+      import Canary.Plugs
       alias UplogWeb.Router.Helpers, as: Routes
     end
   end

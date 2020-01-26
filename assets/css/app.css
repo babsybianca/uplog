@@ -1,3 +1,10 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+.navigation .navigation-item {
+  float: left;
+  margin-bottom: 0;
+  margin-left: 2.5rem;
+  position: relative;
+}

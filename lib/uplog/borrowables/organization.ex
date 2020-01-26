@@ -7,6 +7,8 @@ defmodule Uplog.Borrowables.Organization do
     field :description, :string
     field :name, :string
     field :visible, :boolean, default: true
+    has_many :borrowable_items, Uplog.Borrowables.BorrowableItem
+    many_to_many :users, Uplog.Users.User, join_through: Uplog.Borrowables.OrganizationsUsers
 
     timestamps()
   end

@@ -28,7 +28,24 @@ defmodule UplogWeb.OrganizationController do
 
   def show(conn, %{"id" => id}) do
     organization = Borrowables.get_organization!(id)
-    render(conn, "show.html", organization: organization)
+    users = Borrowables.get_organization_users(organization)
+    users_not_in_organization = Borrowables.get_users_not_in_organization(organization)
+    render(conn, "show.html", organization: organization, users: users, users_not_in_organization: users_not_in_organization)
+  end
+
+  def add_admin(conn, %{"organization_id" => id, "user_id" => user_id}) do
+    organization = Borrowables.get_organization!(id)
+    user = Borrowables.get_user(user_id)
+    case Borrowables.add_organization_admin(organization, user) do
+      {:ok, organization} ->
+        conn
+        |> put_flash(:info, "Admin added successfully")
+        |> redirect(to: Routes.organization_path(conn, :show, id))
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_flash(:info, "Admin could not be added")
+        |> redirect(to: Routes.organization_path(conn, :show, id))
+    end
   end
 
   def edit(conn, %{"id" => id}) do

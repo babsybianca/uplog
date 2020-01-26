@@ -1,5 +1,0 @@
-<h1>Edit Borrow request</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.borrow_request_path(@conn, :update, @borrow_request)) %>
-
-<span><%= link "Back", to: Routes.borrow_request_path(@conn, :index) %></span>

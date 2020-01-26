@@ -1,23 +1,17 @@
 <h1>Show Borrow request</h1>
 
 <ul>
-
-  <li>
-    <strong>Approved at:</strong>
-    <%= @borrow_request.approved_at %>
-  </li>
-
-  <li>
-    <strong>Claimed at:</strong>
-    <%= @borrow_request.claimed_at %>
-  </li>
-
-  <li>
-    <strong>Received back at:</strong>
-    <%= @borrow_request.received_back_at %>
-  </li>
-
+  <%= @borrow_request.item.name %>
+  <%= if @borrow_request.denied_at do %>
+    <p>Request Denied by <%= @borrow_request.denied_by.email %></p>
+  <%= else %>
+    <%= if @borrow_request.approved_at do %>
+      <p>Request Approved by <%= @borrow_request.approved_by.email %></p>
+    <% end %>
+  <% end %>
 </ul>
 
-<span><%= link "Edit", to: Routes.borrow_request_path(@conn, :edit, @borrow_request) %></span>
-<span><%= link "Back", to: Routes.borrow_request_path(@conn, :index) %></span>
+<span><%= link "Approve", to: Routes.organization_borrowable_item_borrow_request_approve_path(@conn, :approve, @organization, @borrowable_item, @borrow_request), method: :approve %></span>
+<span><%= link "Deny", to: Routes.organization_borrowable_item_borrow_request_deny_path(@conn, :deny, @organization, @borrowable_item, @borrow_request), method: :deny %></span>
+
+<span><%= link "Back", to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item) %></span>

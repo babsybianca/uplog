@@ -1,5 +1,5 @@
 <h1>New Borrowable item</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.borrowable_item_path(@conn, :create)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.organization_borrowable_item_path(@conn, :create, @organization)) %>
 
-<span><%= link "Back", to: Routes.borrowable_item_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.organization_borrowable_item_path(@conn, :index, @organization) %></span>

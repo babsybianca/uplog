@@ -3,10 +3,15 @@ defmodule Uplog.Borrowables do
   The Borrowables context.
   """
 
+  import Ecto, warn: false
   import Ecto.Query, warn: false
   alias Uplog.Repo
 
+  alias Uplog.Users.User
+  alias Uplog.Borrowables.OrganizationsUsers
   alias Uplog.Borrowables.Organization
+  alias Uplog.Borrowables.BorrowRequest
+  alias Uplog.Borrowables.BorrowableItem
 
   @doc """
   Returns the list of organizations.
@@ -21,6 +26,7 @@ defmodule Uplog.Borrowables do
     Repo.all(Organization)
   end
 
+  def get_user(id), do: Repo.get!(User, id)
   @doc """
   Gets a single organization.
 
@@ -36,6 +42,29 @@ defmodule Uplog.Borrowables do
 
   """
   def get_organization!(id), do: Repo.get!(Organization, id)
+
+  def get_organization_users(organization) do
+    organization
+    |> Ecto.assoc(:users)
+    |> Repo.all
+  end
+
+  def get_users_not_in_organization(organization) do
+    query = from u in User,
+            left_join: o in OrganizationsUsers,
+              on: u.id == o.user_id and o.organization_id == ^organization.id,
+            where: is_nil(o.organization_id),
+            select: u
+    Repo.all(query)
+  end
+
+  def add_organization_admin(organization, user) do
+    %OrganizationsUsers{}
+    |> OrganizationsUsers.changeset(%{})
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:organization, organization)
+    |> Repo.insert()
+  end
 
   @doc """
   Creates a organization.
@@ -102,8 +131,6 @@ defmodule Uplog.Borrowables do
     Organization.changeset(organization, %{})
   end
 
-  alias Uplog.Borrowables.BorrowableItem
-
   @doc """
   Returns the list of borrowable_items.
 
@@ -114,7 +141,14 @@ defmodule Uplog.Borrowables do
 
   """
   def list_borrowable_items do
-    Repo.all(BorrowableItem)
+    from(BorrowableItem, where: [visible: true])
+    |> Repo.all
+  end
+
+  def list_borrowable_items(organization) do
+    organization
+    |> assoc(:borrowable_items)
+    |> Repo.all
   end
 
   @doc """
@@ -145,8 +179,9 @@ defmodule Uplog.Borrowables do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_borrowable_item(attrs \\ %{}) do
-    %BorrowableItem{}
+  def create_borrowable_item(organization, attrs \\ %{}) do
+    organization
+    |> build_assoc(:borrowable_items)
     |> BorrowableItem.changeset(attrs)
     |> Repo.insert()
   end
@@ -198,8 +233,6 @@ defmodule Uplog.Borrowables do
     BorrowableItem.changeset(borrowable_item, %{})
   end
 
-  alias Uplog.Borrowables.BorrowRequest
-
   @doc """
   Returns the list of borrow_requests.
 
@@ -211,6 +244,8 @@ defmodule Uplog.Borrowables do
   """
   def list_borrow_requests do
     Repo.all(BorrowRequest)
+    |> Repo.preload([:item])
+    |> Repo.preload([:borrower_organization])
   end
 
   @doc """
@@ -227,7 +262,37 @@ defmodule Uplog.Borrowables do
       ** (Ecto.NoResultsError)
 
   """
-  def get_borrow_request!(id), do: Repo.get!(BorrowRequest, id)
+  def get_borrow_request!(id) do
+    Repo.get!(BorrowRequest, id)
+    |> Repo.preload([:approved_by])
+    |> Repo.preload([:denied_by])
+    |> Repo.preload([:item])
+    |> Repo.preload([:borrower_organization])
+  end
+
+  def approve_borrow_request!(user, id) do
+    # TODO:
+    # Ensure proper permissions
+    # Ensure can approve (has not already denied/approved)
+    Repo.get!(BorrowRequest, id)
+    |> Repo.preload([:approved_by])
+    |> Ecto.Changeset.change(%{})
+    |> Ecto.Changeset.put_change(:approved_at, NaiveDateTime.truncate(NaiveDateTime.utc_now, :second))
+    |> Ecto.Changeset.put_assoc(:approved_by, user)
+    |> Repo.update
+  end
+
+  def deny_borrow_request!(user, id) do
+    # TODO:
+    # Ensure proper permissions
+    # Ensure can approve (has not already denied/approved)
+    Repo.get!(BorrowRequest, id)
+    |> Repo.preload([:denied_by])
+    |> Ecto.Changeset.change(%{})
+    |> Ecto.Changeset.put_change(:denied_at, NaiveDateTime.truncate(NaiveDateTime.utc_now, :second))
+    |> Ecto.Changeset.put_assoc(:denied_by, user)
+    |> Repo.update
+  end
 
   @doc """
   Creates a borrow_request.
@@ -241,9 +306,14 @@ defmodule Uplog.Borrowables do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_borrow_request(attrs \\ %{}) do
+  def create_borrow_request(user, organization_id, item) do
+    # TODO:
+    # Check if user has borrow permissions for organization
+    # Check if item is borrowable (ie visible)
     %BorrowRequest{}
-    |> BorrowRequest.changeset(attrs)
+    |> BorrowRequest.changeset(%{ borrower_organization_id: organization_id })
+    |> Ecto.Changeset.put_assoc(:item, item)
+    |> Ecto.Changeset.put_assoc(:borrower_user, user)
     |> Repo.insert()
   end
 

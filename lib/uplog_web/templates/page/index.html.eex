@@ -1,35 +1,16 @@
 <section class="phx-hero">
   <h1><%= gettext "Welcome to %{name}!", name: "UP Log" %></h1>
-  <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
+  <p>Borrow stuff!</p>
 </section>
 
 <section class="row">
   <article class="column">
-    <h2>Resources</h2>
     <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
+      <%= for borrowable_item <- @borrowable_items do %>
+        <li>
+          <%= link borrowable_item.name, to: Routes.organization_borrowable_item_path(@conn, :show, borrowable_item.organization_id, borrowable_item) %>
+        </li>
+      <% end %>
     </ul>
   </article>
 </section>
