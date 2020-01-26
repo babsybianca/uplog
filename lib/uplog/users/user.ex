@@ -4,6 +4,7 @@ defmodule Uplog.Users.User do
 
   schema "users" do
     pow_user_fields()
+    field :super_user, :boolean, default: false
 
     timestamps()
   end
