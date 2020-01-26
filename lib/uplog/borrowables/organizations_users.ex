@@ -5,6 +5,7 @@ defmodule Uplog.Borrowables.OrganizationsUsers do
   schema "organizations_users" do
     field :organization_id, :id
     field :user_id, :id
+    field :added_by_user_id, :id
     field :type, :id
 
     timestamps()
