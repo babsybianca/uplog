@@ -28,4 +28,3 @@
   <li><%= link organization.name, to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item, %{ borrower_organization_id: organization.id }), method: :create %></li>
 <%= end %>
 </ul>
-<span><%= link "Borrow", to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item), method: :create %></span>
