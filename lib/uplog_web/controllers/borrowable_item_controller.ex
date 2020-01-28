@@ -32,7 +32,9 @@ defmodule UplogWeb.BorrowableItemController do
   def show(conn, %{"organization_id" => organization_id, "id" => id}) do
     organization = Borrowables.get_organization!(organization_id)
     borrowable_item = Borrowables.get_borrowable_item!(id)
-    render(conn, "show.html", organization: organization, borrowable_item: borrowable_item)
+    user = Pow.Plug.current_user(conn)
+    organizations = Borrowables.get_user_organizations(user)
+    render(conn, "show.html", organization: organization, borrowable_item: borrowable_item, organizations: organizations)
   end
 
   def edit(conn, %{"organization_id" => organization_id, "id" => id}) do

@@ -11,11 +11,11 @@ defmodule UplogWeb.BorrowRequestController do
     render(conn, "index.html", organization: organization, borrowable_item: borrowable_item, borrow_requests: borrow_requests)
   end
 
-  def create(conn, %{"organization_id" => organization_id, "borrowable_item_id" => item_id}) do
+  def create(conn, %{"organization_id" => organization_id, "borrowable_item_id" => item_id, "borrower_organization_id" => borrower_organization_id}) do
     organization = Borrowables.get_organization!(organization_id)
     borrowable_item = Borrowables.get_borrowable_item!(item_id)
     user = Pow.Plug.current_user(conn)
-    case Borrowables.create_borrow_request(user, 1, borrowable_item) do
+    case Borrowables.create_borrow_request(user, borrower_organization_id, borrowable_item) do
       {:ok, borrow_request} ->
         conn
         |> put_flash(:info, "Borrow request created successfully.")

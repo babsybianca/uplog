@@ -22,4 +22,10 @@
 </ul>
 
 <span><%= link "Edit", to: Routes.organization_borrowable_item_path(@conn, :edit, @organization, @borrowable_item) %></span>
+<h3>Borrow as</h3>
+<ul>
+<%= for organization <- @organizations do %>
+  <li><%= link organization.name, to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item, %{ borrower_organization_id: organization.id }), method: :create %></li>
+<%= end %>
+</ul>
 <span><%= link "Borrow", to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item), method: :create %></span>

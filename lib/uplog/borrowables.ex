@@ -27,6 +27,13 @@ defmodule Uplog.Borrowables do
   end
 
   def get_user(id), do: Repo.get!(User, id)
+
+  def get_user_organizations(user) do
+    user
+    |> Ecto.assoc(:organizations)
+    |> Repo.all
+  end
+
   @doc """
   Gets a single organization.
 
