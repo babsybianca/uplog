@@ -11,7 +11,9 @@
   <% end %>
 </ul>
 
-<span><%= link "Approve", to: Routes.organization_borrowable_item_borrow_request_approve_path(@conn, :approve, @organization, @borrowable_item, @borrow_request), method: :approve %></span>
-<span><%= link "Deny", to: Routes.organization_borrowable_item_borrow_request_deny_path(@conn, :deny, @organization, @borrowable_item, @borrow_request), method: :deny %></span>
+<%= if @can_current_user_approve do %>
+  <span><%= link "Approve", to: Routes.organization_borrowable_item_borrow_request_approve_path(@conn, :approve, @organization, @borrowable_item, @borrow_request), method: :approve %></span>
+  <span><%= link "Deny", to: Routes.organization_borrowable_item_borrow_request_deny_path(@conn, :deny, @organization, @borrowable_item, @borrow_request), method: :deny %></span>
+<% end %>
 
 <span><%= link "Back", to: Routes.organization_borrowable_item_borrow_request_path(@conn, :index, @organization, @borrowable_item) %></span>

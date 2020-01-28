@@ -242,8 +242,12 @@ defmodule Uplog.Borrowables do
       [%BorrowRequest{}, ...]
 
   """
-  def list_borrow_requests do
-    Repo.all(BorrowRequest)
+  def list_borrow_requests(organization_id) do
+    query = from br in BorrowRequest,
+              left_join: i in BorrowableItem,
+                on: br.item_id == i.id,
+              where: i.organization_id == ^organization_id and (is_nil(br.approved_at) and is_nil(br.denied_at))
+    Repo.all(query)
     |> Repo.preload([:item])
     |> Repo.preload([:borrower_organization])
   end
@@ -268,6 +272,13 @@ defmodule Uplog.Borrowables do
     |> Repo.preload([:denied_by])
     |> Repo.preload([:item])
     |> Repo.preload([:borrower_organization])
+  end
+
+  def is_user_organization_admin(user, organization) do
+    OrganizationsUsers
+    |> where([ou], ou.organization_id == ^organization.id)
+    |> where([ou], ou.user_id == ^user.id)
+    |> Repo.one()
   end
 
   def approve_borrow_request!(user, id) do

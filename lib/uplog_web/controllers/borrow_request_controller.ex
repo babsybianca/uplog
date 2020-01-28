@@ -7,7 +7,7 @@ defmodule UplogWeb.BorrowRequestController do
   def index(conn, %{"organization_id" => organization_id, "borrowable_item_id" => item_id}) do
     organization = Borrowables.get_organization!(organization_id)
     borrowable_item = Borrowables.get_borrowable_item!(item_id)
-    borrow_requests = Borrowables.list_borrow_requests()
+    borrow_requests = Borrowables.list_borrow_requests(organization_id)
     render(conn, "index.html", organization: organization, borrowable_item: borrowable_item, borrow_requests: borrow_requests)
   end
 
@@ -32,7 +32,9 @@ defmodule UplogWeb.BorrowRequestController do
     organization = Borrowables.get_organization!(organization_id)
     borrowable_item = Borrowables.get_borrowable_item!(item_id)
     borrow_request = Borrowables.get_borrow_request!(id)
-    render(conn, "show.html", organization: organization, borrowable_item: borrowable_item, borrow_request: borrow_request)
+    user = Pow.Plug.current_user(conn)
+    can_current_user_approve = Borrowables.is_user_organization_admin(user, organization)
+    render(conn, "show.html", can_current_user_approve: can_current_user_approve, organization: organization, borrowable_item: borrowable_item, borrow_request: borrow_request)
   end
 
   def approve(conn, %{"organization_id" => organization_id, "borrowable_item_id" => item_id, "borrow_request_id" => id}) do
@@ -41,11 +43,11 @@ defmodule UplogWeb.BorrowRequestController do
       {:ok, borrow_request} ->
         conn
         |> put_flash(:info, "Request Approved")
-        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :show, organization_id, item_id, id))
+        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :index, organization_id, item_id))
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_flash(:error, "Request Approval failed")
-        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :show, organization_id, item_id, id))
+        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :index, organization_id, item_id))
     end
   end
 
@@ -55,11 +57,11 @@ defmodule UplogWeb.BorrowRequestController do
       {:ok, borrow_request} ->
         conn
         |> put_flash(:info, "Request Denied")
-        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :show, organization_id, item_id, id))
+        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :index, organization_id, item_id))
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_flash(:error, "Request Denial failed")
-        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :show, organization_id, item_id, id))
+        |> redirect(to: Routes.organization_borrowable_item_borrow_request_path(conn, :index, organization_id, item_id))
     end
   end
 

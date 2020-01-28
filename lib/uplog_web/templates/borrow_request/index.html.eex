@@ -1,4 +1,4 @@
-<h1>Listing Borrow requests</h1>
+<h1>Listing Borrow requests for <%= link @organization.name, to: Routes.organization_path(@conn, :show, @organization) %></h1>
 
 <table>
   <thead>

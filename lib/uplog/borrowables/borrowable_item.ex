@@ -6,6 +6,7 @@ defmodule Uplog.Borrowables.BorrowableItem do
     field :description, :string
     field :name, :string
     field :visible, :boolean, default: true
+    has_many :borrow_requests, Uplog.Borrowables.BorrowRequest
     belongs_to :organization, Uplog.Borrowables.Organization
 
     timestamps()
