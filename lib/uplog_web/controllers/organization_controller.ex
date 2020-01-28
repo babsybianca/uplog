@@ -30,7 +30,9 @@ defmodule UplogWeb.OrganizationController do
     organization = Borrowables.get_organization!(id)
     users = Borrowables.get_organization_users(organization)
     users_not_in_organization = Borrowables.get_users_not_in_organization(organization)
-    render(conn, "show.html", organization: organization, users: users, users_not_in_organization: users_not_in_organization)
+    user = Pow.Plug.current_user(conn)
+    is_current_user_org_admin = Borrowables.is_user_organization_admin(user, organization)
+    render(conn, "show.html", organization: organization, users: users, users_not_in_organization: users_not_in_organization, is_current_user_org_admin: is_current_user_org_admin)
   end
 
   def add_admin(conn, %{"organization_id" => id, "user_id" => user_id}) do
