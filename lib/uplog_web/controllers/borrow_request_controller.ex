@@ -24,7 +24,7 @@ defmodule UplogWeb.BorrowRequestController do
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_flash(:error, "Borrow request failed")
-        |> redirect(to: Routes.organization_borrowable_item_path(conn, :show, organization_id, item_id, [changeset: changeset]))
+        |> redirect(to: Routes.organization_borrowable_item_path(conn, :show, organization_id, item_id))
     end
   end
 

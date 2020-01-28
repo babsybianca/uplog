@@ -324,11 +324,24 @@ defmodule Uplog.Borrowables do
     # TODO:
     # Check if user has borrow permissions for organization
     # Check if item is borrowable (ie visible)
-    %BorrowRequest{}
-    |> BorrowRequest.changeset(%{ borrower_organization_id: organization_id })
-    |> Ecto.Changeset.put_assoc(:item, item)
-    |> Ecto.Changeset.put_assoc(:borrower_user, user)
-    |> Repo.insert()
+    
+    # Check if item is not currenly being borrowed
+    # TODO: Race condition
+    br = BorrowRequest
+    |> where([br], br.item_id == ^item.id)
+    |> where([br], br.borrower_organization_id == ^organization_id)
+    |> where([br], is_nil(br.approved_at) and is_nil(br.denied_at))
+    |> Repo.exists?()
+
+    if br do
+      {:error, %Ecto.Changeset{}}
+    else
+      %BorrowRequest{}
+      |> BorrowRequest.changeset(%{ borrower_organization_id: organization_id })
+      |> Ecto.Changeset.put_assoc(:item, item)
+      |> Ecto.Changeset.put_assoc(:borrower_user, user)
+      |> Repo.insert()
+    end
   end
 
   @doc """
