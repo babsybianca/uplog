@@ -55,4 +55,13 @@ defmodule UplogWeb.BorrowableItemController do
         render(conn, "edit.html", borrowable_item: borrowable_item, changeset: changeset)
     end
   end
+
+  def delete(conn, %{"organization_id" => organization_id, "id" => id}) do
+    item = Borrowables.get_borrowable_item!(id)
+    {:ok, _organization} = Borrowables.delete_borrowable_item(item)
+
+    conn
+    |> put_flash(:info, "Borrowable item deleted successfully.")
+    |> redirect(to: Routes.organization_borrowable_item_path(conn, :index, organization_id))
+  end
 end

@@ -146,9 +146,9 @@ defmodule Uplog.Borrowables do
   end
 
   def list_borrowable_items(organization) do
-    organization
-    |> assoc(:borrowable_items)
-    |> Repo.all
+    query = from bi in assoc(organization, :borrowable_items),
+      where: bi.visible == true
+    Repo.all(query)
   end
 
   @doc """
@@ -217,7 +217,10 @@ defmodule Uplog.Borrowables do
 
   """
   def delete_borrowable_item(%BorrowableItem{} = borrowable_item) do
-    Repo.delete(borrowable_item)
+    borrowable_item
+    |> Ecto.Changeset.change(%{})
+    |> Ecto.Changeset.put_change(:visible, false)
+    |> Repo.update
   end
 
   @doc """

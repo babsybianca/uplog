@@ -16,6 +16,6 @@ defmodule Uplog.Borrowables.BorrowableItem do
   def changeset(borrowable_item, attrs) do
     borrowable_item
     |> cast(attrs, [:name, :description, :visible])
-    |> validate_required([:name, :description, :visible])
+    |> validate_required([:name, :description])
   end
 end

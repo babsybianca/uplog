@@ -13,10 +13,6 @@
   <%= textarea f, :description %>
   <%= error_tag f, :description %>
 
-  <%= label f, :visible %>
-  <%= checkbox f, :visible %>
-  <%= error_tag f, :visible %>
-
   <div>
     <%= submit "Save" %>
   </div>
