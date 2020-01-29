@@ -26,8 +26,26 @@ defmodule Uplog.Borrowables do
     Repo.all(Organization)
   end
 
+  @doc """
+  Gets a single user.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+  TODO: Should have a bang as it results in an error
+
+  ## Examples
+
+      iex> get_user(123)
+      %Organization{}
+
+      iex> get_user(456)
+      ** (Ecto.NoResultsError)
+
+  """
   def get_user(id), do: Repo.get!(User, id)
 
+  @doc """
+  Gets user's organizations.
+  """
   def get_user_organizations(user) do
     user
     |> Ecto.assoc(:organizations)
@@ -50,12 +68,18 @@ defmodule Uplog.Borrowables do
   """
   def get_organization!(id), do: Repo.get!(Organization, id)
 
+  @doc """
+  Gets organization's users.
+  """
   def get_organization_users(organization) do
     organization
     |> Ecto.assoc(:users)
     |> Repo.all
   end
 
+  @doc """
+  Get users not in organization.
+  """
   def get_users_not_in_organization(organization) do
     query = from u in User,
             left_join: o in OrganizationsUsers,
@@ -65,6 +89,9 @@ defmodule Uplog.Borrowables do
     Repo.all(query)
   end
 
+  @doc """
+  Add organization admin
+  """
   def add_organization_admin(organization, user) do
     %OrganizationsUsers{}
     |> OrganizationsUsers.changeset(%{})
@@ -152,6 +179,9 @@ defmodule Uplog.Borrowables do
     |> Repo.all
   end
 
+  @doc """
+  List borrowable items
+  """
   def list_borrowable_items(organization) do
     query = from bi in assoc(organization, :borrowable_items),
       where: bi.visible == true
@@ -284,6 +314,9 @@ defmodule Uplog.Borrowables do
     |> Repo.preload([:borrower_organization])
   end
 
+  @doc """
+  Returns a result if the user is an organization admin
+  """
   def is_user_organization_admin(user, organization) do
     OrganizationsUsers
     |> where([ou], ou.organization_id == ^organization.id)
@@ -291,6 +324,9 @@ defmodule Uplog.Borrowables do
     |> Repo.one()
   end
 
+  @doc """
+  Approve borrow request
+  """
   def approve_borrow_request!(user, id) do
     # TODO:
     # Ensure proper permissions
@@ -303,6 +339,9 @@ defmodule Uplog.Borrowables do
     |> Repo.update
   end
 
+  @doc """
+  Deny borrow request
+  """
   def deny_borrow_request!(user, id) do
     # TODO:
     # Ensure proper permissions
