@@ -7,6 +7,12 @@ Solamo of the Department of Computer
 Science, College of Engineering, University
 of the Philippines, Diliman for the AY 2019-
 2020
+Arian Allenson Valdez - 26/01/2020 - Scaffold, Add get user, borrow request methods
+Arian Allenson Valdez - 28/01/2020 - Add borrow request, is_user_org_admin methods
+Arian Allenson Valdez - 28/01/2020 -
+Add borrow request, is_user_org_admin methods, modify delete borrowable_item, prevent double borrowing
+Borrow as org,
+Arian Allenson Valdez - 29/01/2020 - Add comments
 """
 
 defmodule Uplog.Borrowables do

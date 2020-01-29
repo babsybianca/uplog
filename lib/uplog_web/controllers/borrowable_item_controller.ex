@@ -7,6 +7,8 @@ Solamo of the Department of Computer
 Science, College of Engineering, University
 of the Philippines, Diliman for the AY 2019-
 2020
+Arian Allenson Valdez - 26/01/2020 - Scaffold
+Arian Allenson Valdez - 28/01/2020 - Allow deleting of borrowable item, borrow as org
 """
 
 defmodule UplogWeb.BorrowableItemController do

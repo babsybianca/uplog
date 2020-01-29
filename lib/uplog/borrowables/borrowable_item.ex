@@ -7,6 +7,8 @@ Solamo of the Department of Computer
 Science, College of Engineering, University
 of the Philippines, Diliman for the AY 2019-
 2020
+Arian Allenson Valdez - 26/01/2020 - Scaffold, Add assoc, remove 
+Arian Allenson Valdez - 28/01/2020 - Remove :visible to required changeset
 """
 
 defmodule Uplog.Borrowables.BorrowableItem do
