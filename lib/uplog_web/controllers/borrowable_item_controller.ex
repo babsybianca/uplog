@@ -9,6 +9,7 @@ of the Philippines, Diliman for the AY 2019-
 2020
 Arian Allenson Valdez - 26/01/2020 - Scaffold
 Arian Allenson Valdez - 28/01/2020 - Allow deleting of borrowable item, borrow as org
+Bianca Bueno - 30/01/2020 - Fixed bug: non-admin can edit info
 """
 
 defmodule UplogWeb.BorrowableItemController do
