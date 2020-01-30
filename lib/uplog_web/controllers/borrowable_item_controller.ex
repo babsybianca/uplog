@@ -20,7 +20,9 @@ defmodule UplogWeb.BorrowableItemController do
   def index(conn, %{"organization_id" => organization_id}) do
     organization = Borrowables.get_organization!(organization_id)
     borrowable_items = Borrowables.list_borrowable_items(organization)
-    render(conn, "index.html", organization: organization, borrowable_items: borrowable_items)
+    user = Pow.Plug.current_user(conn)
+    can_current_user_approve = Borrowables.is_user_organization_admin(user, organization)
+    render(conn, "index.html", organization: organization, borrowable_items: borrowable_items, can_current_user_approve: can_current_user_approve)
   end
 
   def new(conn, %{"organization_id" => organization_id}) do
